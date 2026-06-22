@@ -1,0 +1,101 @@
+@server = http://localhost:4004
+@service = {{server}}/odata/v4/practice-dms
+ 
+####################################################
+# Create Sales Order
+####################################################
+ 
+POST {{service}}/SalesOrders
+Content-Type: application/json
+ 
+{
+  "salesOrderNo": "4500001234",
+  "CustomerID": "C1000",
+  "CustomerName": "ABC Ltd",
+  "OrderDate": "2026-06-16",
+  "Status": "OPEN",
+  "Items": [
+    {
+  "ProductID": "MAT001",
+  "ProductName": "Laptop",
+  "Quantity": 2,
+  "UnitPrice": 50000,
+  "NetAmount": 100000
+},
+    {
+  "ProductID": "MAT002",
+  "ProductName": "Mouse",
+  "Quantity": 5,
+  "UnitPrice": 500,
+  "NetAmount": 2500
+}
+  ]
+}
+ 
+###
+ 
+####################################################
+# Get Sales Orders
+####################################################
+ 
+GET {{service}}/SalesOrders?$expand=Items
+
+###
+Get {{service}}/SalesOrders?$expand=Documents
+
+
+###
+Get {{service}}/SalesOrders
+ 
+###
+
+####################################################
+# Upload Attachment
+#
+# Replace:
+# SALES_ORDER_UUID
+# BASE64_CONTENT
+####################################################
+ 
+
+
+
+#####
+POST {{service}}/uploadAttachment
+Content-Type: application/json
+
+{
+  "salesOrderId": "11111111-1111-1111-1111-111111111111",
+  "fileName": "applic_so.pdf",
+  "mimeType": "application/pdf",
+  "fileContent": "BASE64_CONTENT"
+}
+ 
+###
+ GET {{service}}/getDmsFiles()
+###
+get {{service}}/downloadFile
+Content-Type: application/json
+
+{
+    "Id": "369_4fLFleOqyCuULch7eom4KK8aCH9yOMJiEJSnDX0"
+}
+
+
+# post document using dms id
+
+###
+POST {{service}}/documents
+Content-Type: application/json
+
+{
+  "objectId":"mu-coJp5MaBu2tiszbJcjCRZqGUdApzdVdT8s8WcDaI",
+  "fileName":"applic_so5.pdf",
+  "mimeType":"application/pdf",
+  "smallid_ID":"11111111-1111-1111-1111-111111111111"
+}
+
+# check metadata
+###
+GET http://localhost:4004/odata/v4/so-dms/$metadata
+
