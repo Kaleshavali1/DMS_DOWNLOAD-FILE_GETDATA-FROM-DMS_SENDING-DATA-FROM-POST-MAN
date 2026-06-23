@@ -2,6 +2,7 @@
   "name": "PracticeDMS",
   "version": "1.0.0",
   "dependencies": {
+    "@cap-js/change-tracking": "^2.0.1",
     "@sap-cloud-sdk/http-client": "^4.7.0",
     "@sap-cloud-sdk/odata-common": "^4.7.0",
     "@sap/cds": "^9",

@@ -1,4 +1,5 @@
 using { sales.db } from '../db/datamodel';
+ using {sap.changelog} from '@cap-js/change-tracking';
  //using { Attachments } from '@cap-js/sdm';
 // extend db.SalesOrders with {
 //  attachment : Composition of many Attachments
@@ -52,8 +53,31 @@ type DmsFile {
 // }
     // action uploadPDF(file: LargeString,docId: UUID) returns String;
     // action downloadPDF(docId: UUID) returns LargeString;
+ entity ChangeView as projection on changelog.ChangeView;
+annotate sap.changelog.aspect @(UI.Facets: [{
+          $Type               : 'UI.ReferenceFacet',
+          ID                  : 'ChangeHistoryFacet',
+          Label               : '{i18n>ChangeHistory}',
+          Target              : 'changes/@UI.PresentationVariant',
+          ![@UI.PartOfPreview]
+}]);
+
+    annotate PracticeDMS.SalesOrders with {
+        CustomerName @changelog @Common.Label : 'Customer Name';
+        OrderDate @changelog @Common.Label : 'Order Date';
+        CustomerID @changelog @Common.Label : 'Customer ID';
+        Status @changelog @Common.Label : 'Status';
+        createdBy @changelog @Common.Label : 'Created By';
+        modifiedBy @changelog @Common.Label : 'Modified By';
+        salesOrderNo @changelog @Common.Label : 'Sales Order No';
+        Items @changelog @Common.Label : 'Items';
+    };
+   
+
+
 
 }
+
 
 // using { sales.db } from '../db/SalesOrder';
 
