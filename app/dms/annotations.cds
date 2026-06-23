@@ -1,5 +1,7 @@
 using PracticeDMS as service from '../../srv/service';
+
 annotate service.SalesOrders with @(
+   
     UI.FieldGroup #GeneratedGroup : {
         $Type : 'UI.FieldGroupType',
         Data : [
@@ -74,6 +76,18 @@ annotate service.SalesOrders with @(
             Label : 'Status',
             Value : Status,
         },
+        {
+            $Type : 'UI.DataFieldForAction',
+            Action : 'PracticeDMS.EntityContainer/sendHoldReport',
+            Label : 'Send Email',
+            Criticality : 2,
+        },
+        {
+            $Type : 'UI.DataFieldForAction',
+            Action : 'PracticeDMS.EntityContainer/sendManager',
+            Label : 'Send Manager Email',
+            Criticality : 2,
+        }
     ],
 );
 

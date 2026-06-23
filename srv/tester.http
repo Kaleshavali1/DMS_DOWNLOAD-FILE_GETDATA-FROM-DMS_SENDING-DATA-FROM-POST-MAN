@@ -1,4 +1,4 @@
-@server = http://localhost:4004
+@server = http://localhost:42171
 @service = {{server}}/odata/v4/practice-dms
  
 ####################################################
@@ -46,6 +46,12 @@ Get {{service}}/SalesOrders?$expand=Documents
 
 ###
 Get {{service}}/SalesOrders
+
+###
+post {{service}}/sendHoldReport
+
+###
+POST {{service}}/sendManager
  
 ###
 

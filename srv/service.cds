@@ -11,7 +11,7 @@ service PracticeDMS {
 entity SalesOrders @(odata.draft.enabled:true)  as projection on db.SalesOrders{
        *,
          Items,
-             Documents
+             Documents,
                // attachment
 };
  entity Documents as projection on db.Documents{
@@ -19,11 +19,18 @@ entity SalesOrders @(odata.draft.enabled:true)  as projection on db.SalesOrders{
     virtual downloadLink : String
 };
     entity SalesOrderItems   as projection on db.SalesOrderItems;
+    entity Customers as projection on db.Customers;
  //function getExistingFiles() returns array of FileMeta;
     function getDmsFiles() returns array of DmsFile;
     action getDmsFile() returns Boolean;
      @Core.MediaType: 'application/pdf'
     action downloadFile(Id : String) returns Binary;
+    
+    // sending email to customers with all the sales orders on hold
+    action sendHoldReport() returns String;
+    // sending email to manager with all the sales orders on hold
+    action sendManager() returns String;
+
     //  type FileResponse {
     // url          : String;
     // content      : LargeBinary

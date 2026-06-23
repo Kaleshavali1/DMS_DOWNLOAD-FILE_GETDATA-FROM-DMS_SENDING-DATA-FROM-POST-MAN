@@ -170,11 +170,12 @@
 // });
 
 const cds = require('@sap/cds');
-
+const { sendEmail } = require('./utils/mailservice');
+const { buildSOTable } = require('./utils/soTemplate');
 const axios = require('axios');
 
-module.exports = cds.service.impl(function () {
-    const { SalesOrders, Documents} = this.entities;
+module.exports = cds.service.impl(async function (srv) {
+    const { SalesOrders, Documents,Customers} = this.entities;
     const DMS_URL =
     'https://api-sdm-di.cfapps.us10.hana.ondemand.com';
  
@@ -349,6 +350,68 @@ res1.send(response.data);
     //     content: response.data
     // };
 });
+
+
+this.on('sendHoldReport', async (req) => {
+  const delay = ms => new Promise(res => setTimeout(res, ms));
+  console.log("SEND HOLD REPORT CALLED");
+    const db = await cds.connect.to('db');
+
+    const SOs = await db.run(
+      SELECT.from(SalesOrders).where({ Status:'Onhold'})
+    );
+   console.log("SOs on hold:", SOs.length);
+    if (!SOs.length) return 'No SOs on hold';
+    for (const so of SOs) {
+      console.log("Processing SO:", so.ID);
+      console.log("Customer ID:", so.customer_id);
+      const customer = await db.run(
+        SELECT.from(Customers).where({ id: so.customer_id })
+      );
+      console.log(customer.length);
+   //for(let index = 0; index < customer.length; index++){
+    for (const cust of customer) {
+      console.log("Customer Name:", cust.CustomerName);
+      // so.CustomerName = customer ? customer.CustomerName : 'Unknown';
+      const html = buildSOTable(SOs);
+
+      await sendEmail(cust ? cust.Mail : 'manager@company.com', 'SO Hold Report', html);
+      await delay(1);
+     console.log("Customer Email:", cust.Mail);
+     
+    //}
+      
+  }
+    
+    }
+    return `Email sent: ${SOs.length} SOs`;
+  });
+
+  this.on('sendManager', async (req) => {
+    
+const db = await cds.connect.to('db');
+
+    const SOs = await db.run(
+      SELECT
+        .from('SalesOrders')
+        .where({ Status: 'Onhold' })
+    );
+
+    if (!SOs.length) 
+      return 'No SOs on hold';
+
+    const html = buildSOTable(SOs);
+
+    await sendEmail(
+           
+'manager@company.com',
+      'SO Hold Report',
+      html
+    );
+
+    return `Email sent: ${SOs.length} SOs`;
+  });
+
 
     this.on('uploadAttachment', async (req) => {
    console.log("UPLOAD CALLED");

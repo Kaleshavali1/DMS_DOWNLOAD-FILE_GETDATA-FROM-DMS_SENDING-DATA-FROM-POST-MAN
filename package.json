@@ -7,7 +7,9 @@
     "@sap-cloud-sdk/odata-common": "^4.7.0",
     "@sap/cds": "^9",
     "@sap/xssec": "^4",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "nodemailer": "^9.0.1",
+    "sap-cf-mailer": "^0.0.5"
   },
   "devDependencies": {
     "@cap-js/sqlite": "^2.4",
